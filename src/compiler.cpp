@@ -87,7 +87,7 @@ Instruction* parse_instruction(int i, string str_instruction)
 	}
 	else
 	{
-		// throw exc
+		throw UnknownInstructionTypeError(1, "Unknown instruction type");
 	}
 }
 

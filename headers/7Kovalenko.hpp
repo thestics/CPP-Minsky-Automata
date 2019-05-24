@@ -89,4 +89,47 @@ private:
 	int cur_program;
 	int cur_state;
 };
+
+// project-specific exceptions
+
+class UnknownInstructionTypeError : public exception
+{
+public:
+
+	UnknownInstructionTypeError(int err_code, string details)
+		: _err_code(err_code)
+		, _details(details)
+	{}
+
+	virtual ~UnknownInstructionTypeError()
+	{}
+
+	virtual int get_err_code() const { return _err_code; }
+	virtual string get_details() const { return _details; }
+
+private:
+	int _err_code;
+	string _details;
+};
+
+class SyntaxError : public exception
+{
+public:
+
+	SyntaxError(int err_code, string details)
+		: _err_code(err_code)
+		, _details(details)
+	{}
+
+	virtual ~SyntaxError()
+	{}
+
+	virtual int get_err_code() const { return _err_code; }
+	virtual string get_details() const { return _details; }
+
+private:
+	int _err_code;
+	string _details;
+};
+
 #endif

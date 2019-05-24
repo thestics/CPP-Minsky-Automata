@@ -51,12 +51,6 @@ i+5 : END
 using namespace std;
 
 
-/*Program* source_to_program(char* path)
-{
-	CompiledSource* program_src = parse_file_to_instructions(path);
-
-}*/
-
 MinskyAutomata* compiled_src_to_auto(CompiledSource* cmp)
 {
 	MinskyAutomata *new_automaton = new MinskyAutomata(cmp->reg_amt);
@@ -73,38 +67,6 @@ MinskyAutomata* compiled_src_to_auto(CompiledSource* cmp)
 
 int main(int argc, char **argv)
 {
-	/*MinskyAutomata *aut = new MinskyAutomata;
-	Program *prog = new Program;
-	int i = 1;
-	int DEC_JNZ = Instruction::INS_DECJNZ;
-	int INC_JMP = Instruction::INS_INCJMP;
-	int END = Instruction::INS_END;
-	// A = 0; B = 1; C = 2
-	Instruction *cur_inst1 = new Instruction( 1, i - 1, DEC_JNZ, i - 1, i    );
-	Instruction *cur_inst2 = new Instruction( 0, i,     DEC_JNZ, i + 1, i + 3);
-	Instruction *cur_inst3 = new Instruction( 1, i + 1, INC_JMP, i + 2, -1   );
-	Instruction *cur_inst4 = new Instruction( 2, i + 2, INC_JMP, i,	   -1    );
-	Instruction *cur_inst5 = new Instruction( 1, i + 3, DEC_JNZ, i + 4, i + 5);
-	Instruction *cur_inst6 = new Instruction( 0, i + 4, INC_JMP, i + 3, -1   );
-	Instruction *cur_inst7 = new Instruction(-1, i + 5, END,    -1,     -1   );
-	vector<Instruction*> vec;
-	vec.push_back(cur_inst1);
-	vec.push_back(cur_inst2);
-	vec.push_back(cur_inst3);
-	vec.push_back(cur_inst4);
-	vec.push_back(cur_inst5);
-	vec.push_back(cur_inst6);
-	vec.push_back(cur_inst7);
-	prog->read_append_instructions(vec);
-	aut->add_program(*prog);
-	aut->set_n(0, 3);
-	vector<int> v;
-	v = aut->get_regs();
-	print_vector(v);
-	aut->exec_program(0);
-	v = aut->get_regs();
-	print_vector(v);*/
-	//vector<string> str_vec = parse_instruction("     abc def ghw      ");
 	CompiledSource* cmp = 
 		parse_file_to_instructions(
 		(char *)"E:\\UserData\\CppScripts\\study_projs\\app2\\minsky_machine\\minsky_machine_programs\\prog1.txt");

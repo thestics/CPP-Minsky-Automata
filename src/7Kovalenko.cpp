@@ -4,6 +4,10 @@
 using namespace std;
 
 
+
+
+
+
 Memory::Memory()
 	: reg_amount(0)
 	, reg_list()
@@ -11,20 +15,24 @@ Memory::Memory()
 
 Memory::Memory(int reg_amt)
 	: reg_amount(reg_amt)
-	, reg_list(reg_amt)  // set a given size to avoid first reallocations (??) 
+	, reg_list(reg_amt)  // set a given size to avoid first reallocations
 {}
 
 void Memory::set_zero(int index) 
 {
 	if (!(0 <= index && index < reg_amount))
 	{
-		// trow exc
+		throw out_of_range("Reg index out of range");
 	}
 	reg_list[index] = 0;
 }
 
 void Memory::set_n(int index, int n)
 {
+	if (!(0 <= index && index < reg_amount))
+	{
+		throw out_of_range("Reg index out of range");
+	}
 	reg_list[index] = n;
 }
 
@@ -47,7 +55,7 @@ int Memory::get_reg(int index) const
 {
 	if (!(0 <= index && index < reg_amount))
 	{
-		// trow exc
+		throw out_of_range("Reg index out of range");
 	}
 	return reg_list[index];
 }
@@ -57,11 +65,38 @@ int Memory::get_reg_amount() const
 	return reg_amount;
 }
 
-void Memory::inc_reg(int index) { reg_list[index]++; }
+void Memory::inc_reg(int index) 
+{ 
+	if (!(0 <= index && index < reg_amount))
+	{
+		throw out_of_range("Reg index out of range");
+	}
+	else
+	{ 
+		reg_list[index]++;
+	} 
+}
 
-void Memory::dec_reg(int index) { reg_list[index]--; }
+void Memory::dec_reg(int index)
+{
+	if (!(0 <= index && index < reg_amount))
+	{
+		throw out_of_range("Reg index out of range");
+	}
+	else
+	{
+		reg_list[index]--;
+	}
+}
 
-bool Memory::is_reg_zero(int index) { return reg_list[index] == 0; }
+bool Memory::is_reg_zero(int index) 
+{
+	if (!(0 <= index && index < reg_amount))
+	{
+		throw out_of_range("Reg index out of range");
+	}
+	return reg_list[index] == 0; 
+}
 
 vector<int> Memory::get_regs() const { return reg_list; }
 
@@ -85,7 +120,7 @@ Instruction::Instruction(int reg_num, int instr_num, int new_instr_type, int new
 {
 	if (!(0 <= new_instr_type && new_instr_type <= 2))
 	{
-		// throw exc UNKNOWN INSTRUCTION TYPE
+		throw UnknownInstructionTypeError(1, "Unknown instruction type");
 	}
 	else
 	{
@@ -193,7 +228,7 @@ void Program::del_instr(int i)
 {
 	if (!(0 <= (size_t)i && i < instr_list.size()))
 	{
-		// throw INDEX ERROR
+		throw out_of_range("Instruction index out of range");
 	}
 	instr_list.erase(instr_list.begin() + i);
 	instr_amt--;
@@ -201,23 +236,24 @@ void Program::del_instr(int i)
 
 void Program::add_instr(Instruction new_instr) 
 {
-	Instruction *copy = new Instruction(new_instr);	// CHECK WILL IT WORK!!!!!(seems like it is lul)
+	Instruction *copy = new Instruction(new_instr);
 	instr_list.push_back(copy);
 	instr_amt++;
 }
 
-void Program::change_inst(int i, Instruction new_instr) 
+void Program::change_inst(int index, Instruction new_instr) 
 {
 	Instruction *copy = new Instruction(new_instr);
-	if (!(0 <= (size_t)i && i < instr_list.size()))
+	if (!(0 <= (size_t)index && index < instr_list.size()))
 	{
-		// throw INDEX ERROR
+		throw out_of_range("Instruction index out of range");
 	}
-	delete[] instr_list[i];
-	instr_list[i] = copy;
+	delete[] instr_list[index];
+	instr_list[index] = copy;
 }
 
 bool Program::is_correct() 
+// simple syntax check 
 {
 	for (size_t i = 0; i < instr_list.size(); i++)
 	{
@@ -255,10 +291,16 @@ void MinskyAutomata::add_program(Program new_program)
 
 void MinskyAutomata::del_program(int index) 
 {
-	if (index == cur_program)
+	// in case of erasing currently active program, cur_program index needs to be reset
+	if (index == cur_program)	
 	{
 		cur_program = 0;
 	}
+	if (!(0 <= index && index <= program_lst.size()))
+	{
+		throw out_of_range("Program index out of range");
+	}
+	delete[] program_lst[index];
 	program_lst.erase(program_lst.begin() + index);
 }
 
@@ -266,7 +308,7 @@ void MinskyAutomata::exec_program(int program_indx)
 {
 	if (!(program_lst[program_indx]->is_correct()))
 	{
-		// throw SYNTAX ERROR
+		throw SyntaxError(1, "END statement is supposed to be present");
 	}
 	cur_program = program_indx;
 	cur_state = 1;
@@ -281,6 +323,10 @@ vector<int> MinskyAutomata::get_regs() { return  mem->get_regs(); }
 
 void MinskyAutomata::add_instruction_to_program(int program_indx, Instruction new_instr) 
 {
+	if (!(0 <= program_indx && program_indx <= program_lst.size()))
+	{
+		throw out_of_range("Program index out of range");
+	}
 	program_lst[program_indx]->add_instr(new_instr);
 }
 
